@@ -1,4 +1,4 @@
-#    Copyright 2008-2013 Christoffer Lervag
+#    Copyright 2008-2014 Christoffer Lervag
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
 
 # External dependencies:
 require 'dicom'
+require 'bindata'
 
 # General module features/settings:
 require_relative 'dicomnet/general/constants'
@@ -25,6 +26,8 @@ require_relative 'dicomnet/general/variables'
 require_relative 'dicomnet/general/version'
 
 # Core library files:
+require_relative 'dicomnet/association_abort'
+
 require_relative 'dicomnet/d_client'
 require_relative 'dicomnet/d_server'
 require_relative 'dicomnet/file_handler'
