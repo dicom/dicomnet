@@ -28,6 +28,8 @@ require_relative 'dicomnet/general/version'
 # Core library files:
 require_relative 'dicomnet/association_abort'
 require_relative 'dicomnet/application_context'
+require_relative 'dicomnet/abstract_syntax'
+require_relative 'dicomnet/transfer_syntax'
 
 require_relative 'dicomnet/d_client'
 require_relative 'dicomnet/d_server'
