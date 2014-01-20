@@ -7,15 +7,15 @@ module DICOMNET
   describe ApplicationContext do
 
     before(:all) do
-      @pdu_type = 16
+      @item_type = 16
       @bin = "\x10\x00\x00\x15\x31\x2e\x32\x2e\x38\x34\x30\x2e\x31\x30\x30\x30\x38\x2e\x33\x2e\x31\x2e\x31\x2e\x31"
-      @invalid_pdu = "\x07\x00\x00\x15\x31\x2e\x32\x2e\x38\x34\x30\x2e\x31\x30\x30\x30\x38\x2e\x33\x2e\x31\x2e\x31\x2e\x31"
+      @invalid_type = "\x07\x00\x00\x15\x31\x2e\x32\x2e\x38\x34\x30\x2e\x31\x30\x30\x30\x38\x2e\x33\x2e\x31\x2e\x31\x2e\x31"
     end
 
     describe '::read' do
 
-      it "raises an error when encountering an unexpected PDU type" do
-        expect {ApplicationContext.read(@invalid_pdu)}.to raise_error
+      it "raises an error when encountering an unexpected item type" do
+        expect {ApplicationContext.read(@invalid_type)}.to raise_error
       end
 
       context "parses an application context binary string" do
@@ -29,7 +29,7 @@ module DICOMNET
         end
 
         it "and sets the 'type' instance variable" do
-          expect(@ac.type).to eql @pdu_type
+          expect(@ac.type).to eql @item_type
         end
 
         it "and sets the 'len' instance variable" do
@@ -59,8 +59,8 @@ module DICOMNET
         expect(@ac).to be_a(ApplicationContext)
       end
 
-      it "by default sets the pdu_type attribute to 16" do
-        expect(@ac.type).to eql @pdu_type
+      it "by default sets the type attribute to 16" do
+        expect(@ac.type).to eql @item_type
       end
 
       it "by default sets the len attribute to 21" do
@@ -87,8 +87,8 @@ module DICOMNET
 
       it "it accepts that the type is set with the valid value" do
         ab = ApplicationContext.new
-        ab.type = @pdu_type
-        expect(ab.type).to eql @pdu_type
+        ab.type = @item_type
+        expect(ab.type).to eql @item_type
       end
 
     end
