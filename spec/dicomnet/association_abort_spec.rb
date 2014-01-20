@@ -7,6 +7,7 @@ module DICOMNET
   describe AssociationAbort do
 
     before(:all) do
+      @pdu_type = 7
       @bin = "\x07\x00\x00\x00\x00\x04\x00\x00\x02\x01"
       @invalid_pdu = "\x06\x00\x00\x00\x00\x04\x00\x00\x00\x00"
     end
@@ -28,7 +29,7 @@ module DICOMNET
         end
 
         it "and sets the 'type' instance variable" do
-          expect(@ab.type).to eql 7
+          expect(@ab.type).to eql @pdu_type
         end
 
         it "and sets the 'len' instance variable" do
@@ -71,7 +72,7 @@ module DICOMNET
       end
 
       it "by default sets the pdu_type attribute to 7" do
-        expect(@ab.type).to eql 7
+        expect(@ab.type).to eql @pdu_type
       end
 
       it "by default sets the len attribute to 4" do
@@ -97,10 +98,15 @@ module DICOMNET
 
     describe '#type=' do
 
-      it "is not able to change its value" do
+      it "it raises an error if the type is attempted set with an invalid value" do
         ab = AssociationAbort.new
-        ab.type = 5
-        expect(ab.type).to eql 7
+        expect {ab.type = 5}.to raise_error
+      end
+
+      it "it accepts that the type is set with the valid value" do
+        ab = AssociationAbort.new
+        ab.type = @pdu_type
+        expect(ab.type).to eql @pdu_type
       end
 
     end

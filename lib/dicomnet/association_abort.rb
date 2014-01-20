@@ -5,11 +5,14 @@ module DICOMNET
   # ordinary DICOM negotiation framework. Its use signals that the
   # negotiation is over.
   #
+  # For more information about the A-Abort PDU Structure, refer to the
+  # DICOM Standard, Part 8, Chapter 9.3.8.
+  #
   class AssociationAbort < BinData::Record
 
     endian :big
-    # The PDU type code.
-    uint8 :type, :value => 7, :check_value => lambda { value == 7}
+    # The PDU type code (07H).
+    uint8 :type, :asserted_value => 7
     string :reserved1, :read_length => 1, :initial_value => "\x00"
     # The PDU length.
     uint32 :len, :value => 4
