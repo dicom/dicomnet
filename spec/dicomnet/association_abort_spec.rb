@@ -100,7 +100,7 @@ module DICOMNET
 
       it "it raises an error if the type is attempted set with an invalid value" do
         ab = AssociationAbort.new
-        expect {ab.type = 5}.to raise_error
+        expect {ab.type = "\x03"}.to raise_error
       end
 
       it "it accepts that the type is set with the valid value" do

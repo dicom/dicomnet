@@ -82,7 +82,7 @@ module DICOMNET
 
       it "it raises an error if the type is attempted set with an invalid value" do
         ac = ApplicationContext.new
-        expect {ac.type = 5}.to raise_error
+        expect {ac.type = "\x04"}.to raise_error
       end
 
       it "it accepts that the type is set with the valid value" do
