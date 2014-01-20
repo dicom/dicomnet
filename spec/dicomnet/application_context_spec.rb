@@ -7,7 +7,7 @@ module DICOMNET
   describe ApplicationContext do
 
     before(:all) do
-      @item_type = 16
+      @item_type = "\x10"
       @bin = "\x10\x00\x00\x15\x31\x2e\x32\x2e\x38\x34\x30\x2e\x31\x30\x30\x30\x38\x2e\x33\x2e\x31\x2e\x31\x2e\x31"
       @invalid_type = "\x07\x00\x00\x15\x31\x2e\x32\x2e\x38\x34\x30\x2e\x31\x30\x30\x30\x38\x2e\x33\x2e\x31\x2e\x31\x2e\x31"
     end
@@ -59,7 +59,7 @@ module DICOMNET
         expect(@ac).to be_a(ApplicationContext)
       end
 
-      it "by default sets the type attribute to 16" do
+      it "by default sets the type attribute to 10H" do
         expect(@ac.type).to eql @item_type
       end
 

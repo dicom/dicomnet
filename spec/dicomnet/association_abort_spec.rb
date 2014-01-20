@@ -7,7 +7,7 @@ module DICOMNET
   describe AssociationAbort do
 
     before(:all) do
-      @pdu_type = 7
+      @pdu_type = "\x07"
       @bin = "\x07\x00\x00\x00\x00\x04\x00\x00\x02\x01"
       @invalid_pdu = "\x06\x00\x00\x00\x00\x04\x00\x00\x00\x00"
     end
@@ -71,7 +71,7 @@ module DICOMNET
         expect(@ab).to be_a(AssociationAbort)
       end
 
-      it "by default sets the pdu_type attribute to 7" do
+      it "by default sets the pdu_type attribute to 07H" do
         expect(@ab.type).to eql @pdu_type
       end
 
