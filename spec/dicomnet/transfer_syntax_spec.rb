@@ -18,29 +18,29 @@ module DICOMNET
         expect {TransferSyntax.read(@invalid_type)}.to raise_error
       end
 
-      context "parses an transfer syntax binary string" do
+      context "parses a transfer syntax binary string and" do
 
         before(:all) do
           @ts = TransferSyntax.read(@bin)
         end
 
-        it "and returns an TransferSyntax instance" do
+        it "returns an TransferSyntax instance" do
           expect(@ts).to be_a(TransferSyntax)
         end
 
-        it "and sets the 'type' instance variable" do
+        it "sets the 'type' instance variable" do
           expect(@ts.type).to eql @item_type
         end
 
-        it "and sets the 'len' instance variable" do
+        it "sets the 'len' instance variable" do
           expect(@ts.len).to eql 17
         end
 
-        it "and sets the 'name' instance variable" do
+        it "sets the 'name' instance variable" do
           expect(@ts.name).to eql '1.2.840.10008.1.2'
         end
 
-        it "and sets the 'reserved1' instance variable" do
+        it "sets the 'reserved1' instance variable" do
           expect(@ts.reserved1).to eql "\x00"
         end
 
@@ -86,9 +86,9 @@ module DICOMNET
       end
 
       it "it ascepts that the type is set with the valid value" do
-        ab = TransferSyntax.new
-        ab.type = @item_type
-        expect(ab.type).to eql @item_type
+        ts = TransferSyntax.new
+        ts.type = @item_type
+        expect(ts.type).to eql @item_type
       end
 
     end
@@ -154,7 +154,7 @@ module DICOMNET
         File.open(f, 'wb') do |io|
           ts.write(io)
         end
-        output = File.read(f)
+        output = File.open(f, 'rb').read
         expect(output).to eql @bin
       end
 

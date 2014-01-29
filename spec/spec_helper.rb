@@ -19,6 +19,10 @@ module Kernel
 end
 
 suppress_warnings do
+  # Association Requests:
+  DICOMNET::A_RQ = 'samples/association_request_1_pc_3_ts.bin'
+  DICOMNET::A_RQ_2PC = 'samples/association_request_2_pc_2_ts.bin'
+  DICOMNET::USER_INFO = 'samples/user_information.bin'
   # Sample DICOM files:
   DICOMNET::DCM_IMPLICIT = 'samples/implicit_mr_16bit_mono2.dcm'
   DICOMNET::DCM_EXPLICIT = 'samples/explicit_rtdose_16bit_mono2_3d-volume.dcm'

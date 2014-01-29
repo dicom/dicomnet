@@ -206,7 +206,7 @@ module DICOMNET
         File.open(f, 'wb') do |io|
           ab.write(io)
         end
-        output = File.read(f)
+        output = File.open(f, 'rb').read
         expect(output).to eql @bin
       end
 

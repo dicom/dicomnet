@@ -13,7 +13,7 @@ module DICOMNET
     string :type, :read_length => 1, :asserted_value => "\x10"
     string :reserved1, :read_length => 1, :initial_value => "\x00"
     # The item length.
-    uint16 :len, :value=>lambda {name.length}
+    uint16 :len, :value => lambda {name.length}
     # Application context name.
     string :name, :read_length => :len, :initial_value => '1.2.840.10008.3.1.1.1'
 

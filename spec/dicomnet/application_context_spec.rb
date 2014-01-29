@@ -86,9 +86,9 @@ module DICOMNET
       end
 
       it "it accepts that the type is set with the valid value" do
-        ab = ApplicationContext.new
-        ab.type = @item_type
-        expect(ab.type).to eql @item_type
+        ac = ApplicationContext.new
+        ac.type = @item_type
+        expect(ac.type).to eql @item_type
       end
 
     end
@@ -153,7 +153,7 @@ module DICOMNET
         File.open(f, 'wb') do |io|
           ac.write(io)
         end
-        output = File.read(f)
+        output = File.open(f, 'rb').read
         expect(output).to eql @bin
       end
 

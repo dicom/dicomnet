@@ -13,9 +13,13 @@ module DICOMNET
     string :type, :read_length => 1, :asserted_value => "\x40"
     string :reserved1, :read_length => 1, :initial_value => "\x00"
     # The item length.
-    uint16 :len, :value=>lambda {name.length}
+    uint16 :len, :value => lambda {num_bytes - 4}
     # Transfer syntax name.
     string :name, :read_length => :len
+
+    #def update_length
+      #len.assign(num_bytes-4)
+    #end
 
   end
 
