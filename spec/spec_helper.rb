@@ -19,10 +19,21 @@ module Kernel
 end
 
 suppress_warnings do
-  # Association Requests:
+  # Application context:
+  DICOMNET::ACX = 'samples/application_context.bin'
+  # Abstract syntax:
+  DICOMNET::ASX = 'samples/abstract_syntax_mr.bin'
+  # Transfer syntax:
+  DICOMNET::TSX = 'samples/transfer_syntax_implicit_little.bin'
+  # Association request:
   DICOMNET::A_RQ = 'samples/association_request_1_pc_3_ts.bin'
   DICOMNET::A_RQ_2PC = 'samples/association_request_2_pc_2_ts.bin'
+  # Presentation context (request):
+  DICOMNET::PC_RQ = 'samples/presentation_context_request_1_ts.bin'
+  DICOMNET::PC_RQ_2TS = 'samples/presentation_context_request_2_ts_id5.bin'
+  # User information:
   DICOMNET::USER_INFO = 'samples/user_information.bin'
+  DICOMNET::USER_INFO_UNKNOWN_ITEM = 'samples/user_information_with_unknown_item_x99_asdf.bin'
   # Sample DICOM files:
   DICOMNET::DCM_IMPLICIT = 'samples/implicit_mr_16bit_mono2.dcm'
   DICOMNET::DCM_EXPLICIT = 'samples/explicit_rtdose_16bit_mono2_3d-volume.dcm'

@@ -11,8 +11,8 @@ module DICOMNET
 
     endian :big
     # The item type code (various - e.g. 51H).
-    string :type, :read_length => 1, :initial_value => "\x00"
-    string :reserved1, :read_length => 1, :initial_value => "\x00"
+    string :type, :length => 1, :initial_value => "\x00"
+    string :reserved1, :length => 1, :initial_value => "\x00"
     # The item length.
     uint16 :len, :value => lambda {num_bytes - 4}
     # User data value (decoding depends on the type of item):

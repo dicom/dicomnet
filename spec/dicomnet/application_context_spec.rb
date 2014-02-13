@@ -8,8 +8,9 @@ module DICOMNET
 
     before(:all) do
       @item_type = "\x10"
-      @bin = "\x10\x00\x00\x15\x31\x2e\x32\x2e\x38\x34\x30\x2e\x31\x30\x30\x30\x38\x2e\x33\x2e\x31\x2e\x31\x2e\x31"
-      @invalid_type = "\x07\x00\x00\x15\x31\x2e\x32\x2e\x38\x34\x30\x2e\x31\x30\x30\x30\x38\x2e\x33\x2e\x31\x2e\x31\x2e\x31"
+      @bin = File.open(ACX, 'rb').read
+      @bin_with_invalid_type = @bin.dup
+      @bin_with_invalid_type[0] = "\x07"
     end
 
     describe '::read' do
@@ -122,6 +123,17 @@ module DICOMNET
         ac = ApplicationContext.new
         ac.name = '1.2.34'
         expect(ac.name).to eql '1.2.34'
+      end
+
+    end
+
+
+    describe '#reserved1=' do
+
+      it "changes its value (and maintains a fixed length)" do
+        ac = ApplicationContext.new
+        ac.reserved1 = "\x01\x99"
+        expect(ac.reserved1).to eql "\x01"
       end
 
     end

@@ -8,14 +8,15 @@ module DICOMNET
 
     before(:all) do
       @item_type = "\x30"
-      @bin = "\x30\x00\x00\x19\x31\x2e\x32\x2e\x38\x34\x30\x2e\x31\x30\x30\x30\x38\x2e\x35\x2e\x31\x2e\x34\x2e\x31\x2e\x31\x2e\x34"
-      @invalid_type = "\x12\x00\x00\x19\x31\x2e\x32\x2e\x38\x34\x30\x2e\x31\x30\x30\x30\x38\x2e\x35\x2e\x31\x2e\x34\x2e\x31\x2e\x31\x2e\x34"
+      @bin = File.open(ASX, 'rb').read
+      @bin_with_invalid_type = @bin.dup
+      @bin_with_invalid_type[0] = "\x12"
     end
 
     describe '::read' do
 
       it "raises an error when encountering an unexpected item type" do
-        expect {AbstractSyntax.read(@invalid_type)}.to raise_error
+        expect {AbstractSyntax.read(@bin_with_invalid_type)}.to raise_error
       end
 
       context "parses an abstract syntax binary string" do
@@ -123,6 +124,17 @@ module DICOMNET
         as = AbstractSyntax.new
         as.name = '1.2.34'
         expect(as.name).to eql '1.2.34'
+      end
+
+    end
+
+
+    describe '#reserved1=' do
+
+      it "changes its value (and maintains a fixed length)" do
+        as = AbstractSyntax.new
+        as.reserved1 = "\x01\x99"
+        expect(as.reserved1).to eql "\x01"
       end
 
     end

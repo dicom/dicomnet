@@ -4,7 +4,7 @@ require 'spec_helper'
 
 module DICOMNET
 
-  describe AssociationRequestStruct do
+  describe AssociationRequestScaffold do
 
     before(:all) do
       @item_type = "\x01"
@@ -19,17 +19,17 @@ module DICOMNET
     describe '::read' do
 
       it "raises an error when encountering an unexpected item type" do
-        expect {AssociationRequestStruct.read(@bin_with_invalid_ar_type)}.to raise_error
+        expect {AssociationRequestScaffold.read(@bin_with_invalid_ar_type)}.to raise_error
       end
 
       context "parses an association request binary string and" do
 
         before(:all) do
-          @ar = AssociationRequestStruct.read(@bin)
+          @ar = AssociationRequestScaffold.read(@bin)
         end
 
-        it "returns an AssociationRequestStruct instance" do
-          expect(@ar).to be_a(AssociationRequestStruct)
+        it "returns an AssociationRequestScaffold instance" do
+          expect(@ar).to be_a(AssociationRequestScaffold)
         end
 
         it "sets the 'type' instance variable" do
@@ -73,7 +73,7 @@ module DICOMNET
       context "parses a association request binary string containing multiple presentation context items and" do
 
         before(:all) do
-          @ar = AssociationRequestStruct.read(@bin2pc)
+          @ar = AssociationRequestScaffold.read(@bin2pc)
         end
 
         it "sets the 'len' instance variable" do
@@ -92,11 +92,11 @@ module DICOMNET
     describe '::new' do
 
       before(:all) do
-        @ar = AssociationRequestStruct.new
+        @ar = AssociationRequestScaffold.new
       end
 
-      it "creates a new AssociationRequestStruct instance" do
-        expect(@ar).to be_a(AssociationRequestStruct)
+      it "creates a new AssociationRequestScaffold instance" do
+        expect(@ar).to be_a(AssociationRequestScaffold)
       end
 
       it "by default sets the type attribute to 01H" do
@@ -137,7 +137,7 @@ module DICOMNET
     describe '#called_ae=' do
 
       it "changes its value (and applies proper padding)" do
-        ar = AssociationRequestStruct.new
+        ar = AssociationRequestScaffold.new
         ar.called_ae = "HOST"
         expect(ar.called_ae).to eql "HOST            "
       end
@@ -148,7 +148,7 @@ module DICOMNET
     describe '#calling_ae=' do
 
       it "changes its value (and applies proper padding)" do
-        ar = AssociationRequestStruct.new
+        ar = AssociationRequestScaffold.new
         ar.calling_ae = "CLIENT"
         expect(ar.calling_ae).to eql "CLIENT          "
       end
@@ -159,7 +159,7 @@ module DICOMNET
     describe '#protocol_version=' do
 
       it "changes its value (and maintains a fixed length)" do
-        ar = AssociationRequestStruct.new
+        ar = AssociationRequestScaffold.new
         ar.protocol_version = "\x00\x02\x99"
         expect(ar.protocol_version).to eql "\x00\x02"
       end
@@ -170,12 +170,12 @@ module DICOMNET
     describe '#type=' do
 
       it "raises an error if the type is attempted set with an invalid value" do
-        ar = AssociationRequestStruct.new
+        ar = AssociationRequestScaffold.new
         expect {ar.type = "\x09"}.to raise_error
       end
 
       it "accepts that the type is set with the valid value" do
-        ar = AssociationRequestStruct.new
+        ar = AssociationRequestScaffold.new
         ar.type = @item_type
         expect(ar.type).to eql @item_type
       end
@@ -186,7 +186,7 @@ module DICOMNET
     describe '#reserved1=' do
 
       it "changes its value (and maintains a fixed length)" do
-        ar = AssociationRequestStruct.new
+        ar = AssociationRequestScaffold.new
         ar.reserved1 = "\x01\x99"
         expect(ar.reserved1).to eql "\x01"
       end
@@ -197,7 +197,7 @@ module DICOMNET
     describe '#reserved2=' do
 
       it "changes its value (and maintains a fixed length)" do
-        ar = AssociationRequestStruct.new
+        ar = AssociationRequestScaffold.new
         ar.reserved2 = "\x01\x01\x99"
         expect(ar.reserved2).to eql "\x01\x01"
       end
@@ -208,7 +208,7 @@ module DICOMNET
     describe '#reserved3=' do
 
       it "changes its value (and maintains a fixed length)" do
-        ar = AssociationRequestStruct.new
+        ar = AssociationRequestScaffold.new
         ar.reserved3 = "\x01"
         expect(ar.reserved3).to eql "\x01" + "\x00" * 31
       end
@@ -220,7 +220,7 @@ module DICOMNET
 
       it "changes its value" do
         context_item = ContextItem.new(:type => "\x06")
-        ar = AssociationRequestStruct.new
+        ar = AssociationRequestScaffold.new
         ar.context_items << context_item
         expect(ar.context_items).to eq([context_item])
       end
@@ -231,7 +231,7 @@ module DICOMNET
     describe '#len' do
 
       it "is synchronized with any changing attributes" do
-        ar = AssociationRequestStruct.new
+        ar = AssociationRequestScaffold.new
         initial_length = ar.len.dup
         context_item = ContextItem.new(:type => "\x06")
         ar.context_items << context_item
@@ -245,7 +245,7 @@ module DICOMNET
     describe '#len=' do
 
       it "is not able to change its value (to something other than the length of the remaining structure)" do
-        ar = AssociationRequestStruct.new
+        ar = AssociationRequestScaffold.new
         ar.len = 5
         expect(ar.len).not_to eql 5
       end
@@ -256,19 +256,19 @@ module DICOMNET
     describe '#to_binary_s' do
 
       it "reproduces the original binary string (in this single presentation context case)" do
-        ar = AssociationRequestStruct.read(@bin)
+        ar = AssociationRequestScaffold.read(@bin)
         output = ar.to_binary_s
         expect(output).to eql @bin
       end
 
       it "reproduces the original binary string in this multiple presentation context case)" do
-        ar = AssociationRequestStruct.read(@bin2pc)
+        ar = AssociationRequestScaffold.read(@bin2pc)
         output = ar.to_binary_s
         expect(output).to eql @bin2pc
       end
 
       it "uses the modified attributes along with the defaults to produce a valid string" do
-        ar = AssociationRequestStruct.read(@bin)
+        ar = AssociationRequestScaffold.read(@bin)
         bin = @bin.dup
         bin[7] = "\x09"
         ar.protocol_version = "\x00\x09"
@@ -282,7 +282,7 @@ module DICOMNET
     describe '#write' do
 
       it "encodes the object to file (reproducing the original binary string)" do
-        ar = AssociationRequestStruct.read(@bin)
+        ar = AssociationRequestScaffold.read(@bin)
         f = File.join(TMPDIR, 'association_request_struct.bin')
         File.open(f, 'wb') do |io|
           ar.write(io)

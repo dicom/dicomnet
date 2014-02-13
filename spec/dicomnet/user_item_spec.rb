@@ -200,6 +200,17 @@ module DICOMNET
     end
 
 
+    describe '#reserved1=' do
+
+      it "changes its value (and maintains a fixed length)" do
+        ui = UserItem.new
+        ui.reserved1 = "\x01\x99"
+        expect(ui.reserved1).to eql "\x01"
+      end
+
+    end
+
+
     describe '#to_binary_s' do
 
       it "reproduces the original binary string" do

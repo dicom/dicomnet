@@ -11,14 +11,15 @@ module DICOMNET
       @implementation_uid = UserItem.new(:type => "\x52", :val => '1.2.826.0.1.3680043.8.641')
       @implementation_version = UserItem.new(:type => "\x55", :val => 'RUBY-DCM_0.9.5')
       @item_type = "\x50"
-      @bin = "\x50\x00\x00\x37\x51\x00\x00\x04\x00\x00\x80\x00\x52\x00\x00\x19\x31\x2e\x32\x2e\x38\x32\x36\x2e\x30\x2e\x31\x2e\x33\x36\x38\x30\x30\x34\x33\x2e\x38\x2e\x36\x34\x31\x55\x00\x00\x0e\x52\x55\x42\x59\x2d\x44\x43\x4d\x5f\x30\x2e\x39\x2e\x35".force_encoding('ASCII-8BIT')
-      @bin_with_invalid_ui_type = "\x23\x00\x00\x37\x51\x00\x00\x04\x00\x00\x80\x00\x52\x00\x00\x19\x31\x2e\x32\x2e\x38\x32\x36\x2e\x30\x2e\x31\x2e\x33\x36\x38\x30\x30\x34\x33\x2e\x38\x2e\x36\x34\x31\x55\x00\x00\x0e\x52\x55\x42\x59\x2d\x44\x43\x4d\x5f\x30\x2e\x39\x2e\x35".force_encoding('ASCII-8BIT')
+      @bin = File.open(USER_INFO, 'rb').read
+      @bin_with_invalid_type = @bin.dup
+      @bin_with_invalid_type[0] = "\x23"
     end
 
     describe '::read' do
 
       it "raises an error when encountering an unexpected item type" do
-        expect {UserInformation.read(@bin_with_invalid_ui_type)}.to raise_error
+        expect {UserInformation.read(@bin_with_invalid_type)}.to raise_error
       end
 
       context "parses a user information binary string (containing the 3 default user items) and" do
@@ -53,7 +54,7 @@ module DICOMNET
       context "parses a user information binary string (containing a 4th, unknown user item) and" do
 
         before(:all) do
-          @bin_unknown = "\x50\x00\x00\x3f\x51\x00\x00\x04\x00\x00\x80\x00\x52\x00\x00\x19\x31\x2e\x32\x2e\x38\x32\x36\x2e\x30\x2e\x31\x2e\x33\x36\x38\x30\x30\x34\x33\x2e\x38\x2e\x36\x34\x31\x55\x00\x00\x0e\x52\x55\x42\x59\x2d\x44\x43\x4d\x5f\x30\x2e\x39\x2e\x35\x99\x00\x00\x04\x61\x73\x64\x66".force_encoding('ASCII-8BIT')
+          @bin_unknown = File.open(USER_INFO_UNKNOWN_ITEM, 'rb').read
           @ui_unknown = UserInformation.read(@bin_unknown)
         end
 
@@ -61,7 +62,7 @@ module DICOMNET
           expect(@ui_unknown.len).to eql @bin_unknown.length - 4
         end
 
-        it "sets the 'transfer_syntaxes' instance variable array" do
+        it "sets the 'user_items' instance variable array" do
           unknown_item = UserItem.new(:type => "\x99", :val => 'asdf')
           expect(@ui_unknown.user_items).to eq([@max_size, @implementation_uid, @implementation_version, unknown_item])
         end
@@ -155,6 +156,28 @@ module DICOMNET
         ui = UserInformation.new
         ui.len = 5
         expect(ui.len).not_to eql 5
+      end
+
+    end
+
+
+    describe '#user_items=' do
+
+      it "changes its value" do
+        ui = UserInformation.new
+        ui.user_items = [@implementation_uid]
+        expect(ui.user_items).to eq([@implementation_uid])
+      end
+
+    end
+
+
+    describe '#reserved1=' do
+
+      it "changes its value (and maintains a fixed length)" do
+        ui = UserInformation.new
+        ui.reserved1 = "\x01\x99"
+        expect(ui.reserved1).to eql "\x01"
       end
 
     end

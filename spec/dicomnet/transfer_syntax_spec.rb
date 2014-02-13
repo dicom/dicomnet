@@ -8,14 +8,15 @@ module DICOMNET
 
     before(:all) do
       @item_type = "\x40"
-      @bin = "\x40\x00\x00\x11\x31\x2e\x32\x2e\x38\x34\x30\x2e\x31\x30\x30\x30\x38\x2e\x31\x2e\x32"
-      @invalid_type = "\x13\x00\x00\x11\x31\x2e\x32\x2e\x38\x34\x30\x2e\x31\x30\x30\x30\x38\x2e\x31\x2e\x32"
+      @bin = File.open(TSX, 'rb').read
+      @bin_with_invalid_type = @bin.dup
+      @bin_with_invalid_type[0] = "\x13"
     end
 
     describe '::read' do
 
       it "raises an error when encountering an unexpected item type" do
-        expect {TransferSyntax.read(@invalid_type)}.to raise_error
+        expect {TransferSyntax.read(@bin_with_invalid_type)}.to raise_error
       end
 
       context "parses a transfer syntax binary string and" do
@@ -123,6 +124,17 @@ module DICOMNET
         ts = TransferSyntax.new
         ts.name = '1.2.34'
         expect(ts.name).to eql '1.2.34'
+      end
+
+    end
+
+
+    describe '#reserved1=' do
+
+      it "changes its value (and maintains a fixed length)" do
+        ts = TransferSyntax.new
+        ts.reserved1 = "\x01\x99"
+        expect(ts.reserved1).to eql "\x01"
       end
 
     end

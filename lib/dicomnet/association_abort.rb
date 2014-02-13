@@ -12,12 +12,12 @@ module DICOMNET
 
     endian :big
     # The PDU type code (07H).
-    string :type, :read_length => 1, :asserted_value => "\x07"
-    string :reserved1, :read_length => 1, :initial_value => "\x00"
+    string :type, :length => 1, :asserted_value => "\x07"
+    string :reserved1, :length => 1, :initial_value => "\x00"
     # The PDU length.
     uint32 :len, :value => 4
-    string :reserved2, :read_length => 1, :initial_value => "\x00"
-    string :reserved3, :read_length => 1, :initial_value => "\x00"
+    string :reserved2, :length => 1, :initial_value => "\x00"
+    string :reserved3, :length => 1, :initial_value => "\x00"
     # The source of a situation causing an abort.
     uint8 :source, :initial_value => 0
     # The reason for an abort.

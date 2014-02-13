@@ -10,8 +10,8 @@ module DICOMNET
 
     endian :big
     # The item type code (10H).
-    string :type, :read_length => 1, :asserted_value => "\x10"
-    string :reserved1, :read_length => 1, :initial_value => "\x00"
+    string :type, :length => 1, :asserted_value => "\x10"
+    string :reserved1, :length => 1, :initial_value => "\x00"
     # The item length.
     uint16 :len, :value => lambda {name.length}
     # Application context name.

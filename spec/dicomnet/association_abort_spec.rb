@@ -9,13 +9,13 @@ module DICOMNET
     before(:all) do
       @pdu_type = "\x07"
       @bin = "\x07\x00\x00\x00\x00\x04\x00\x00\x02\x01"
-      @invalid_pdu = "\x06\x00\x00\x00\x00\x04\x00\x00\x00\x00"
+      @bin_with_invalid_pdu = "\x06\x00\x00\x00\x00\x04\x00\x00\x00\x00"
     end
 
     describe '::read' do
 
       it "raises an error when encountering an unexpected PDU type" do
-        expect {AssociationAbort.read(@invalid_pdu)}.to raise_error
+        expect {AssociationAbort.read(@bin_with_invalid_pdu)}.to raise_error
       end
 
       context "parses an association abort binary string" do
@@ -140,6 +140,39 @@ module DICOMNET
         ab = AssociationAbort.new
         ab.reason = 1
         expect(ab.reason).to eql 1
+      end
+
+    end
+
+
+    describe '#reserved1=' do
+
+      it "changes its value (and maintains a fixed length)" do
+        ab = AssociationAbort.new
+        ab.reserved1 = "\x01\x99"
+        expect(ab.reserved1).to eql "\x01"
+      end
+
+    end
+
+
+    describe '#reserved2=' do
+
+      it "changes its value (and maintains a fixed length)" do
+        ab = AssociationAbort.new
+        ab.reserved2 = "\x02\x99"
+        expect(ab.reserved2).to eql "\x02"
+      end
+
+    end
+
+
+    describe '#reserved3=' do
+
+      it "changes its value (and maintains a fixed length)" do
+        ab = AssociationAbort.new
+        ab.reserved3 = "\x03\x99"
+        expect(ab.reserved3).to eql "\x03"
       end
 
     end

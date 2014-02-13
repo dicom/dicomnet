@@ -14,29 +14,29 @@ module DICOMNET
 
     endian :big
     # The item type code (01H).
-    string :type, :read_length => 1, :asserted_value => "\x01"
-    string :reserved1, :read_length => 1, :initial_value => "\x00"
+    string :type, :length => 1, :asserted_value => "\x01"
+    string :reserved1, :length => 1, :initial_value => "\x00"
     # The item length.
     uint32 :len, :value => lambda {num_bytes - 6}
     # Protocol version.
-    string :protocol_version, :read_length => 2, :initial_value => "\x00\x01"
-    string :reserved2, :read_length => 2, :initial_value => "\x00\x00"
+    string :protocol_version, :length => 2, :initial_value => "\x00\x01"
+    string :reserved2, :length => 2, :initial_value => "\x00\x00"
     # The server side application entity name.
-    string :called_ae, :length => 16, :initial_value => "DESTINATION", :pad_byte=>"\x20"
+    string :called_ae, :length => 16, :initial_value => "DESTINATION", :pad_byte => "\x20"
     # The client side application entity name.
-    string :calling_ae, :length => 16, :initial_value => "RUBY_DICOM", :pad_byte=>"\x20"
-    string :reserved3, :read_length => 32, :initial_value => "\x00" * 32
+    string :calling_ae, :length => 16, :initial_value => "RUBY_DICOM", :pad_byte => "\x20"
+    string :reserved3, :length => 32, :initial_value => "\x00" * 32
     # The application context structure.
     application_context :application_context
     # The presentation context structures (1 or several).
-    array :presentation_contexts, :type => :presentation_context, :initial_length => 0
+    array :presentation_context_requests, :type => :presentation_context_request, :initial_length => 0
     # The user information structure.
     user_information :user_information
 
     # Reads the association request binary string.
     #
     def self.read(str)
-      r = AssociationRequestStruct.read(str)
+      r = AssociationRequestScaffold.read(str)
       a = self.new(
         :len => r.len,
         :reserved1 => r.reserved1,
@@ -51,7 +51,7 @@ module DICOMNET
         when "\x10"
           a.application_context = ApplicationContext.read(item.to_binary_s)
         when "\x20"
-          a.presentation_contexts << PresentationContext.read(item.to_binary_s)
+          a.presentation_context_requests << PresentationContextRequest.read(item.to_binary_s)
         when "\x50"
           a.user_information = UserInformation.read(item.to_binary_s)
         else

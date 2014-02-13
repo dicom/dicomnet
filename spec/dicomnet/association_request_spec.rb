@@ -8,20 +8,20 @@ module DICOMNET
 
     before(:all) do
       @ac = ApplicationContext.new(:name => '1.2.840.10008.3.1.1.1')
-      #@as = AbstractSyntax.new(:name => '1.2.840.10008.5.1.4.1.1.4') # MR
       @as = AbstractSyntax.new(:name => '1.2.840.10008.1.1') #Verification
       @ts1 = TransferSyntax.new(:name => '1.2.840.10008.1.2') # Implicit Little
       @ts2 = TransferSyntax.new(:name => '1.2.840.10008.1.2.1') # Explicit Little
       @ts3 = TransferSyntax.new(:name => '1.2.840.10008.1.2.2') # Explicit Big
-      @pc = PresentationContext.new(:id => 1, :abstract_syntax => @as, :transfer_syntaxes => [@ts1, @ts2, @ts3])
+      @pc = PresentationContextRequest.new(:id => 1, :abstract_syntax => @as, :transfer_syntaxes => [@ts1, @ts2, @ts3])
       @ui = UserInformation.read(File.open(USER_INFO, 'rb').read)
       @item_type = "\x01"
       # AR with one presentation context, containing 3 transfer syntaxes:
       @bin = File.open(A_RQ, 'rb').read
-      @bin_with_invalid_ar_type = @bin.dup
-      @bin_with_invalid_ar_type[0] = "\x07"
       # AR with two presentation contexts, each containing 2 transfer sytnaxes:
       @bin2pc = File.open(A_RQ_2PC, 'rb').read
+      # AR with invalid pdu type:
+      @bin_with_invalid_ar_type = @bin.dup
+      @bin_with_invalid_ar_type[0] = "\x07"
     end
 
     describe '::read' do
@@ -77,7 +77,7 @@ module DICOMNET
         end
 
         it "sets the 'presentation_contexts' instance variable array" do
-          expect(@ar.presentation_contexts).to eq([@pc])
+          expect(@ar.presentation_context_requests).to eq([@pc])
         end
 
         it "sets the 'user_information' instance variable" do
@@ -101,7 +101,7 @@ module DICOMNET
         end
 
         it "loads 2 presentation contexts" do
-          expect(@ar.presentation_contexts.length).to eq(2)
+          expect(@ar.presentation_context_requests.length).to eq(2)
         end
 
         it "sets the 'user_information' instance variable" do
@@ -181,9 +181,9 @@ module DICOMNET
 
     describe '#protocol_version=' do
 
-      it "changes its value" do
+      it "changes its value (and maintains a fixed length)" do
         ar = AssociationRequest.new
-        ar.protocol_version = "\x00\x02"
+        ar.protocol_version = "\x00\x02\x99"
         expect(ar.protocol_version).to eql "\x00\x02"
       end
 
@@ -201,6 +201,39 @@ module DICOMNET
         ar = AssociationRequest.new
         ar.type = @item_type
         expect(ar.type).to eql @item_type
+      end
+
+    end
+
+
+    describe '#reserved1=' do
+
+      it "changes its value (and maintains a fixed length)" do
+        ar = AssociationRequest.new
+        ar.reserved1 = "\x01\x99"
+        expect(ar.reserved1).to eql "\x01"
+      end
+
+    end
+
+
+    describe '#reserved2=' do
+
+      it "changes its value (and maintains a fixed length)" do
+        ar = AssociationRequest.new
+        ar.reserved2 = "\x01\x01\x99"
+        expect(ar.reserved2).to eql "\x01\x01"
+      end
+
+    end
+
+
+    describe '#reserved3=' do
+
+      it "changes its value (and maintains a fixed length)" do
+        ar = AssociationRequest.new
+        ar.reserved3 = "\x01"
+        expect(ar.reserved3).to eql "\x01" + "\x00" * 31
       end
 
     end
