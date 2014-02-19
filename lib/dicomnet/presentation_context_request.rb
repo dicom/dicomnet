@@ -1,17 +1,17 @@
 module DICOMNET
 
-  # The presentation context follows the application context, and conveys
+  # The presentation context (request) follows the application context, and conveys
   # the purpose as well as the preferred encoding to use for a specific task.
   # The presentation context contains one abstract syntax and one or serveral
   # transfer syntaxes.
   #
-  # For more information about the Presentation context item structure, refer
-  # to the DICOM Standard, Part 8, Chapter 9.3.2.2.
+  # For more information about the presentation context (request) item
+  # structure, refer to the DICOM Standard, Part 8, Chapter 9.3.2.2.
   #
   class PresentationContextRequest < BinData::Record
 
     endian :big
-    # The item type code (10H).
+    # The item type code.
     string :type, :length => 1, :asserted_value => "\x20"
     string :reserved1, :length => 1, :initial_value => "\x00"
     # The item length.
@@ -26,6 +26,8 @@ module DICOMNET
 
     # Resets the transfer syntaxes array with a one-element array containing
     # the given transfer syntax.
+    #
+    # @param [TransferSyntax] ts a transfer syntax
     #
     def transfer_syntax=(ts)
       raise "Expected TransferSyntax, got #{ts.class}" unless ts.is_a?(TransferSyntax)

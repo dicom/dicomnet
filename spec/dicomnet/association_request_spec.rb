@@ -76,7 +76,7 @@ module DICOMNET
           expect(@ar.application_context).to eq(@ac)
         end
 
-        it "sets the 'presentation_contexts' instance variable array" do
+        it "sets the 'presentation_context_requests' instance variable array" do
           expect(@ar.presentation_context_requests).to eq([@pc])
         end
 

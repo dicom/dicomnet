@@ -4,8 +4,8 @@ module DICOMNET
   # specific pieces of technical information related to the communication,
   # like e.g. the maximum network data package size.
   #
-  # For more information about the User sub item structure, refer
-  # to the DICOM Standard, Part 8, Chapter 9.3.2.3.
+  # For more information about the user sub item structure, refer
+  # to the DICOM Standard, Part 8, Chapters 9.3.2.3 and 9.3.3.3.
   #
   class UserItem < BinData::Record
 

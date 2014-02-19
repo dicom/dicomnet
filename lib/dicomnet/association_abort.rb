@@ -5,13 +5,13 @@ module DICOMNET
   # ordinary DICOM negotiation framework. Its use signals that the
   # negotiation is over.
   #
-  # For more information about the A-Abort PDU Structure, refer to the
+  # For more information about the A-Abort PDU structure, refer to the
   # DICOM Standard, Part 8, Chapter 9.3.8.
   #
   class AssociationAbort < BinData::Record
 
     endian :big
-    # The PDU type code (07H).
+    # The PDU type code.
     string :type, :length => 1, :asserted_value => "\x07"
     string :reserved1, :length => 1, :initial_value => "\x00"
     # The PDU length.
@@ -31,7 +31,7 @@ module DICOMNET
       3 => 'Reserved',
       4 => 'Unrecognized PDU parameter',
       5 => 'Unexpected PDU parameter',
-      6 => 'Invalid PDU parameter value',
+      6 => 'Invalid PDU parameter value'
     }
 
     # The source for the situation which caused an abort notification.
@@ -43,11 +43,15 @@ module DICOMNET
 
     # Gives an explanation of the reason code.
     #
+    # @return [String] a description corresponding to the reason code
+    #
     def reason_description
       REASONS[self.reason] || "Unknown (invalid) reason code: #{self.reason} (Valid codes are 0-6)"
     end
 
     # Gives an explanation of the source code.
+    #
+    # @return [String] a description corresponding to the source code
     #
     def source_description
       SOURCES[self.source] || "Unknown (invalid) source code: #{self.source} (Valid codes are 0-2)"

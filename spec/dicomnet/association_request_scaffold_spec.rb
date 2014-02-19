@@ -283,7 +283,7 @@ module DICOMNET
 
       it "encodes the object to file (reproducing the original binary string)" do
         ar = AssociationRequestScaffold.read(@bin)
-        f = File.join(TMPDIR, 'association_request_struct.bin')
+        f = File.join(TMPDIR, 'association_request_scaffold.bin')
         File.open(f, 'wb') do |io|
           ar.write(io)
         end

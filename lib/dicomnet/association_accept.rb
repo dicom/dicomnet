@@ -1,20 +1,21 @@
 module DICOMNET
 
-  # The association request is the initial message sent from a client to a host
-  # in order to establish a DICOM communication. The request contains various
-  # types of information contained in the header, as well as three items:
+  # The association accept is the answer sent from the host to the client
+  # in order to convey which parts of the proposed DICOM communication
+  # have been accepted. The accept message is structured similarly to the
+  # request, containing a header followed by three items:
   # -Application Context
   # -Presentation Context
   # -User Information
   #
-  # For more information about the A-ASSOCIATE-RQ PDU structure, refer
-  # to the DICOM Standard, Part 8, Chapter 9.3.2.
+  # For more information about the A-ASSOCIATE-AC PDU structure, refer
+  # to the DICOM Standard, Part 8, Chapter 9.3.3.
   #
-  class AssociationRequest < BinData::Record
+  class AssociationAccept < BinData::Record
 
     endian :big
     # The PDU type code.
-    string :type, :length => 1, :asserted_value => "\x01"
+    string :type, :length => 1, :asserted_value => "\x02"
     string :reserved1, :length => 1, :initial_value => "\x00"
     # The item length.
     uint32 :len, :value => lambda {num_bytes - 6}
@@ -22,24 +23,24 @@ module DICOMNET
     string :protocol_version, :length => 2, :initial_value => "\x00\x01"
     string :reserved2, :length => 2, :initial_value => "\x00\x00"
     # The server side application entity name.
-    string :called_ae, :length => 16, :initial_value => "DESTINATION", :pad_byte => "\x20"
+    string :called_ae, :length => 16, :initial_value => "RUBY_DICOM", :pad_byte => "\x20"
     # The client side application entity name.
-    string :calling_ae, :length => 16, :initial_value => "RUBY_DICOM", :pad_byte => "\x20"
+    string :calling_ae, :length => 16, :initial_value => "CLIENT", :pad_byte => "\x20"
     string :reserved3, :length => 32, :initial_value => "\x00" * 32
     # The application context structure.
     application_context :application_context
     # The presentation context structures (1 or several).
-    array :presentation_context_requests, :type => :presentation_context_request, :initial_length => 0
+    array :presentation_context_responses, :type => :presentation_context_response, :initial_length => 0
     # The user information structure.
     user_information :user_information
 
-    # Reads the association request binary string.
+    # Reads the association accept binary string.
     #
-    # @param [String] str an association request binary string
-    # @return [AssociationRequest] the created AssociationRequest instance
+    # @param [String] str an association accept binary string
+    # @return [AssociationAccept] the created AssociationAccept instance
     #
     def self.read(str)
-      r = AssociationRequestScaffold.read(str)
+      r = AssociationAcceptScaffold.read(str)
       a = self.new(
         :len => r.len,
         :reserved1 => r.reserved1,
@@ -53,12 +54,12 @@ module DICOMNET
         case item.type
         when "\x10"
           a.application_context = ApplicationContext.read(item.to_binary_s)
-        when "\x20"
-          a.presentation_context_requests << PresentationContextRequest.read(item.to_binary_s)
+        when "\x21"
+          a.presentation_context_responses << PresentationContextResponse.read(item.to_binary_s)
         when "\x50"
           a.user_information = UserInformation.read(item.to_binary_s)
         else
-          raise "Unexpected item type encountered. Expected 0x10, 0x20 or 0x50, got: 0x#{item.type.unpack('H*')[0]}"
+          raise "Unexpected item type encountered. Expected 0x10, 0x21 or 0x50, got: 0x#{item.type.unpack('H*')[0]}"
         end
       end
       a
