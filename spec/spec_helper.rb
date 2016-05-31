@@ -55,5 +55,6 @@ end
 # Create a directory for temporary files (and delete the directory if it already exists):
 require 'fileutils'
 FileUtils.rmtree(DICOMNET::TMPDIR) if File.directory?(DICOMNET::TMPDIR)
+sleep(0.001) # (For some reason, a small delay is needed here to avoid sporadic exceptions)
 FileUtils.mkdir(DICOMNET::TMPDIR)
 FileUtils.mkdir(DICOMNET::LOGDIR)
