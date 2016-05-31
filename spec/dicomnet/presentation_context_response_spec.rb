@@ -20,7 +20,7 @@ module DICOMNET
     describe '::read' do
 
       it "raises an error when encountering an unexpected item type" do
-        expect {PresentationContextResponse.read(@bin_with_invalid_pc_type)}.to raise_error
+        expect {PresentationContextResponse.read(@bin_with_invalid_pc_type)}.to raise_error(BinData::ValidityError)
       end
 
       context "parses a presentation context binary string and" do
@@ -137,7 +137,7 @@ module DICOMNET
 
       it "it raises an error if the type is attempted set with an invalid value" do
         pc = PresentationContextResponse.new
-        expect {pc.type = "\x04"}.to raise_error
+        expect {pc.type = "\x04"}.to raise_error(BinData::ValidityError)
       end
 
       it "it accepts that the type is set with the valid value" do

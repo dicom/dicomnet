@@ -24,7 +24,7 @@ module DICOMNET
     describe '::read' do
 
       it "raises an error when encountering an unexpected item type" do
-        expect {PresentationContextRequest.read(@bin_with_invalid_pc_type)}.to raise_error
+        expect {PresentationContextRequest.read(@bin_with_invalid_pc_type)}.to raise_error(BinData::ValidityError)
       end
 
       context "parses a presentation context binary string and" do
@@ -186,7 +186,7 @@ module DICOMNET
 
       it "raises an error if the argument is not a TransferSyntax" do
         pc = PresentationContextRequest.new
-        expect {pc.transfer_syntax = @as1}.to raise_error
+        expect {pc.transfer_syntax = @as1}.to raise_error /TransferSyntax/
       end
 
       it "fills transfer_syntaxes array of this empty presentation context instance with the argument instance" do
@@ -209,7 +209,7 @@ module DICOMNET
 
       it "it raises an error if the type is attempted set with an invalid value" do
         pc = PresentationContextRequest.new
-        expect {pc.type = "\x04"}.to raise_error
+        expect {pc.type = "\x04"}.to raise_error(BinData::ValidityError)
       end
 
       it "it accepts that the type is set with the valid value" do

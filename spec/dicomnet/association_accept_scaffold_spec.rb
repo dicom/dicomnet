@@ -19,7 +19,7 @@ module DICOMNET
     describe '::read' do
 
       it "raises an error when encountering an unexpected item type" do
-        expect {AssociationAcceptScaffold.read(@bin_with_invalid_type)}.to raise_error
+        expect {AssociationAcceptScaffold.read(@bin_with_invalid_type)}.to raise_error(BinData::ValidityError)
       end
 
       context "parses an association accept binary string and" do
@@ -171,7 +171,7 @@ module DICOMNET
 
       it "raises an error if the type is attempted set with an invalid value" do
         ac = AssociationAcceptScaffold.new
-        expect {ac.type = "\x09"}.to raise_error
+        expect {ac.type = "\x09"}.to raise_error(BinData::ValidityError)
       end
 
       it "accepts that the type is set with the valid value" do

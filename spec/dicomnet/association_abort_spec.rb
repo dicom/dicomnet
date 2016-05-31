@@ -15,7 +15,7 @@ module DICOMNET
     describe '::read' do
 
       it "raises an error when encountering an unexpected PDU type" do
-        expect {AssociationAbort.read(@bin_with_invalid_pdu)}.to raise_error
+        expect {AssociationAbort.read(@bin_with_invalid_pdu)}.to raise_error(BinData::ValidityError)
       end
 
       context "parses an association abort binary string" do
@@ -100,7 +100,7 @@ module DICOMNET
 
       it "it raises an error if the type is attempted set with an invalid value" do
         ab = AssociationAbort.new
-        expect {ab.type = "\x03"}.to raise_error
+        expect {ab.type = "\x03"}.to raise_error(BinData::ValidityError)
       end
 
       it "it accepts that the type is set with the valid value" do

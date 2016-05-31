@@ -15,7 +15,7 @@ module DICOMNET
     describe '::read' do
 
       it "raises an error when encountering an unexpected PDU type" do
-        expect {AssociationReleaseRequest.read(@bin_with_invalid_pdu)}.to raise_error
+        expect {AssociationReleaseRequest.read(@bin_with_invalid_pdu)}.to raise_error(BinData::ValidityError)
       end
 
       context "parses an association release request binary string" do
@@ -79,7 +79,7 @@ module DICOMNET
 
       it "it raises an error if the type is attempted set with an invalid value" do
         arq = AssociationReleaseRequest.new
-        expect {arq.type = "\x03"}.to raise_error
+        expect {arq.type = "\x03"}.to raise_error(BinData::ValidityError)
       end
 
       it "it accepts that the type is set with the valid value" do

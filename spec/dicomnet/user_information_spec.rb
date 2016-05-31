@@ -19,7 +19,7 @@ module DICOMNET
     describe '::read' do
 
       it "raises an error when encountering an unexpected item type" do
-        expect {UserInformation.read(@bin_with_invalid_type)}.to raise_error
+        expect {UserInformation.read(@bin_with_invalid_type)}.to raise_error(BinData::ValidityError)
       end
 
       context "parses a user information binary string (containing the 3 default user items) and" do
@@ -125,7 +125,7 @@ module DICOMNET
 
       it "it raises an error if the type is attempted set with an invalid value" do
         ui = UserInformation.new
-        expect {ui.type = "\x09"}.to raise_error
+        expect {ui.type = "\x09"}.to raise_error(BinData::ValidityError)
       end
 
       it "it accepts that the type is set with the valid value" do

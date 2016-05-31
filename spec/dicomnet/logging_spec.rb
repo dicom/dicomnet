@@ -55,7 +55,7 @@ module DICOMNET
       DICOMNET.logger.info("Information")
       DICOMNET.logger.warn("Warning")
       DICOMNET.logger.error("Errors")
-      expect(File.open(LOGDIR + 'logfile6.log').readlines.last.include?('DICOMNET')).to be_false
+      expect(File.open(LOGDIR + 'logfile6.log').readlines.last.include?('DICOMNET')).to be false
     end
 
     it "should print messages when a verbose mode has been set (Logger::DEBUG)" do
@@ -65,7 +65,7 @@ module DICOMNET
       DICOMNET.logger.info("Information")
       DICOMNET.logger.warn("Warning")
       DICOMNET.logger.error("Errors")
-      expect(File.open(LOGDIR + 'logfile7.log').readlines.last.include?('DICOMNET')).to be_true
+      expect(File.open(LOGDIR + 'logfile7.log').readlines.last.include?('DICOMNET')).to be true
     end
 
   end
